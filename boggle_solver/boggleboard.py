@@ -3,6 +3,10 @@ import string
 import itertools
 
 class Board():
+    """ Basic representation of a Boggle board.
+
+    Describes an n x n matrix populated with random (or predetermined) characters.
+    """
     def __init__(self, size=4, grid=[]):
         self.size = size
         self.grid = grid or self.generate_grid()
