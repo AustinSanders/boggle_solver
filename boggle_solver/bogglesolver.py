@@ -1,4 +1,6 @@
 from pygtrie import CharTrie
+from functools import reduce
+from itertools import product
 
 class BoggleSolver():
     """ A Boggle solver based on a prefix trie.
@@ -8,6 +10,7 @@ class BoggleSolver():
     dictionary : pygtrie.CharTrie
         A user-defined dictionary used as the basis for the solver
     """
+
     def __init__(self, filepath):
         self.dictionary = CharTrie()
         self.load(filepath)
@@ -50,11 +53,20 @@ class BoggleSolver():
         dictionary:  
             {word: [[row1, col1][row2, col2][row3, col3]}
         """
+        def merge(a,b):
+            """ Helper funtion for reduce.
+            Update and return a dictionary.
+            """
+            a.update(b)
+            return a
+
         solutions = {}
-        # Perform local search by iterating through possible starting points
-        for ridx, row in enumerate(board.grid):
-            for cidx, _ in enumerate(row):
-                solutions.update(self.solve_tile(board, [[ridx, cidx]]))
+        # Precompute starting points
+        tiles = product(range(board.size), range(board.size))
+
+        # Solve the board for each starting point and combine outputs
+        solutions = reduce(merge, (self.solve_tile(board, [tile]) for tile in tiles))
+
         # Trim invalid (short) words from the dictionary
         solutions = {k:solutions[k] for k in solutions if len(k)>=min_length}
         return solutions
@@ -86,14 +98,18 @@ class BoggleSolver():
         """
         if not path:
             return solutions
+
         # Convert path of grid indices to string
         prefix = "".join([board.grid[x][y] for x, y in path])
+
         if not self.dictionary.has_subtrie(prefix):
             # If current prefix is not in the tree, no use in checking further
             return solutions
         if self.dictionary.has_key(prefix):
             # If current substring is a word, add to dict of solutions and keep looking
             solutions[prefix] = path
+
         for new_path in ([*path, [x,y]] for x, y in board.neighbors(path[-1]) if [x,y] not in path):
             solutions.update(self.solve_tile(board, new_path, solutions))
+
         return solutions

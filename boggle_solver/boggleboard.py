@@ -1,6 +1,6 @@
 import random
 import string
-import itertools
+from itertools import product
 
 class Board():
     """ Basic representation of a Boggle board.
@@ -20,10 +20,12 @@ class Board():
             out += "\n"
         return out
 
+
     @property
     def size(self):
         """ The size of the board represented as a square matrix of size x size."""
         return self._size
+
 
     @size.setter
     def size(self, val):
@@ -38,6 +40,7 @@ class Board():
     def grid(self):
         """The n x n grid of tiles on the board."""
         return self._grid
+
 
     @grid.setter
     def grid(self, vals):
@@ -83,7 +86,7 @@ class Board():
         
         """
         row, col = tile
-        neighbors = [[x,y] for x, y in itertools.product(range(row-1, row+2), range(col-1, col+2)) if [x,y] != tile and self.is_valid([x,y])]
+        neighbors = [[x,y] for x, y in product(range(row-1, row+2), range(col-1, col+2)) if [x,y] != tile and self.is_valid([x,y])]
         return neighbors
 
     
