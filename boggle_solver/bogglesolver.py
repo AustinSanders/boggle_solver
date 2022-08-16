@@ -62,10 +62,10 @@ class BoggleSolver():
 
         solutions = {}
         # Precompute starting points
-        tiles = product(range(board.size), range(board.size))
+        tile_indices = product(range(board.size), range(board.size))
 
         # Solve the board for each starting point and combine outputs
-        solutions = reduce(merge, (self.solve_tile(board, [tile]) for tile in tiles))
+        solutions = reduce(merge, (self.solve_tile(board, [tile]) for tile in tile_indices))
 
         # Trim invalid (short) words from the dictionary
         solutions = {k:solutions[k] for k in solutions if len(k)>=min_length}

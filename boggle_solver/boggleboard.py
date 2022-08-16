@@ -82,8 +82,6 @@ class Board():
         -------
         list of lists
             List of lists containing indices of neighboring tiles
-
-        
         """
         row, col = tile
         neighbors = [[x,y] for x, y in product(range(row-1, row+2), range(col-1, col+2)) if [x,y] != tile and self.is_valid([x,y])]
