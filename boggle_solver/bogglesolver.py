@@ -96,9 +96,6 @@ class BoggleSolver():
               which contains all solutions found in the current traversal.
               Indices indicate the traversal path at which the word can be found.
         """
-        if not path:
-            return solutions
-
         # Convert path of grid indices to string
         prefix = "".join([board.grid[x][y] for x, y in path])
 
